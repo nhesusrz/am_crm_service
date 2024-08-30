@@ -84,4 +84,4 @@ This interface allows you to view, create, and manage buckets and their contents
 
 ## Using Postman
 
-To test the API, you can use Postman. Import the provided Postman collection file into Postman: Download Postman Collection
+To test the API, you can use Postman. Import the provided Postman collection file into Postman: [Download Postman Collection](https://github.com/user-attachments/files/16822519/AM_CRM_SERVICE.postman_collection.json)
