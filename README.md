@@ -58,7 +58,8 @@ To install Docker Compose from the official repository:
 
 1. Clone the repo <https://github.com/nhesusrz/am_crm_service.git>
 2. `cd am_crm_service`
-3. Run Docker Compose to build and start the services. This command will build the Docker images and start the containers for your application, PostgreSQL, and MinIO.:
+3. `mv .env.example .env`
+4. Run Docker Compose to build and start the services. This command will build the Docker images and start the containers for your application, PostgreSQL, and MinIO.:
 
     `docker-compose up --build`
 
@@ -85,3 +86,14 @@ This interface allows you to view, create, and manage buckets and their contents
 ## Using Postman
 
 To test the API, you can use Postman. Import the provided Postman collection file into Postman: [Download Postman Collection](https://github.com/user-attachments/files/16822519/AM_CRM_SERVICE.postman_collection.json)
+
+## Cleaning Up Docker Resources
+
+To clean up everything related to the containers, including volumes and images, follow these steps:
+
+1. Stop and remove containers: 
+
+    `docker stop app_container minio_container postgres_container`  
+    `docker rm app_container minio_container postgres_container`
+2. The volumes defined in your _docker-compose.yml_ file are _postgres_data_ and _minio_data_. To remove these volumes, use: `docker volume rm postgres_data minio_data`
+3. To remove the images _postgres:latest_ and _minio/minio_ use: `docker rmi postgres:latest minio/minio`
