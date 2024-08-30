@@ -59,7 +59,7 @@ To install Docker Compose from the official repository:
          cp .env.example .env
 4. Run Docker Compose to build and start the services. This command will build the Docker images and start the containers for your application, PostgreSQL, and MinIO.:
     ##
-        docker compose up --build
+        docker compose up -d --build
 
 ## Access the Application 
 The FastAPI application will be available at http://localhost:8000. Use this URL to interact with the API.
