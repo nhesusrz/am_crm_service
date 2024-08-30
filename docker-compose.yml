@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      target: production
+    container_name: app_container
+    ports:
+      - "${APP_PORT}:8000"
+    depends_on:
+      - postgres
+      - minio
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    container_name: minio_container
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_ACCESS_KEY}
+    ports:
+      - "${MINIO_PORT}:9000"
+      - "9001:9001" # WebUI
+    volumes:
+      - minio_data:/data
+    command: server /minio-image/storage --console-address :9001
+
+volumes:
+  postgres_data:
+  minio_data:

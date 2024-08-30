@@ -1,0 +1,1 @@
+"""Data base module tests."""
