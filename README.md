@@ -32,9 +32,13 @@ Before deploying the application, make sure you have Docker and Docker Compose i
 
 ### Installing Docker
 
-Follow the instructions on the [official Docker website](https://www.docker.com/) to install Docker for your operating system.
+Follow the instructions on the [official Docker website](https://docs.docker.com/engine/install/) to install Docker engine in your operating system.
 
 ### Installing Docker Compose
+
+Starting from Docker version 1.13, Docker Compose is included as part of Docker installations. 
+
+#### Installation Requirements for Earlier Versions
 
 To install Docker Compose from the official repository:
 
@@ -48,7 +52,7 @@ To install Docker Compose from the official repository:
 
 3. **Verify Installation:** Check that Docker Compose is installed correctly. You should see the version of Docker Compose that you installed.
 ##
-        docker compose --version
+        docker-compose --version
 
 ## Deployment with Docker Compose
 
@@ -57,9 +61,12 @@ To install Docker Compose from the official repository:
          cd am_crm_service
 3. ##
          cp .env.example .env
-4. Run Docker Compose to build and start the services. This command will build the Docker images and start the containers for your application, PostgreSQL, and MinIO.:
+4. Run Docker Compose to build and start the services. This command will build the Docker images and start the containers of the application, PostgreSQL, and MinIO:
     ##
         docker compose up -d --build
+    Or for earlier versions
+    ##
+        docker-compose up -d --build
 
 ## Access the Application 
 The FastAPI application will be available at http://localhost:8000. Use this URL to interact with the API.
