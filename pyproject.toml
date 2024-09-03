@@ -137,12 +137,3 @@ extend-select = [
     "PLR",  # pylint Refactor
     "PLW",  # pylint Warning
 ]
-
-[tool.flake8]
-exclude = [
-    "alembic/versions/*"
-]
-ignore = [
-    "E501",  # Ignore line length errors
-    "W503"   # Ignore line break before binary operator
-]

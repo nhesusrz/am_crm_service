@@ -4,26 +4,32 @@ repos:
     hooks:
       - id: black
         language_version: python3
+        exclude: ^alembic/versions/
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
         name: isort (python)
+        exclude: ^alembic/versions/
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.6.3
     hooks:
       - id: ruff
         language_version: python3
+        exclude: ^alembic/versions/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v1.2.3
     hooks:
     - id: flake8
+      exclude: ^alembic/versions/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^alembic/versions/
       - id: end-of-file-fixer
+        exclude: ^alembic/versions/
