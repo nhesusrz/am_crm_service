@@ -97,7 +97,6 @@ omit = [
 exclude = [
     "alembic"
 ]
-#line_length = 79
 extend-ignore = ["E203"]
 
 
@@ -140,4 +139,10 @@ extend-select = [
 ]
 
 [tool.flake8]
-exclude = ["alembic/*"]
+exclude = [
+    "alembic/versions/*"
+]
+ignore = [
+    "E501",  # Ignore line length errors
+    "W503"   # Ignore line break before binary operator
+]

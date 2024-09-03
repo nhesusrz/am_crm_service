@@ -16,6 +16,21 @@ This project uses a modern stack for building and testing a robust backend appli
 
 Navigate to <http://localhost:8000/docs> find documentation and resources to test the application locally.
 
+## Setting Up Pre-commit Hooks
+
+Pre-commit hooks help ensure code quality by running checks and formatting tools before commits. Follow these steps to set up pre-commit hooks in your repository:
+Install the hooks defined in the `.pre-commit-config.yaml` file:
+##
+      pre-commit install
+
+To run all configured hooks on all files, use:
+##
+      pre-commit run --all-files
+
+To update the hooks to their latest versions, use:
+##
+      pre-commit autoupdate
+
 ## Alembic Migrations
 
 ### Auto generating migrations
