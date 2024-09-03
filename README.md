@@ -36,7 +36,7 @@ Follow the instructions on the [official Docker website](https://docs.docker.com
 
 ### Installing Docker Compose
 
-Starting from Docker version 1.13, Docker Compose is included as part of Docker installations. 
+Starting from Docker version 1.13, Docker Compose is included as part of Docker installations.
 
 #### Installation Requirements for Earlier Versions
 
@@ -68,7 +68,7 @@ To install Docker Compose from the official repository:
     ##
         docker-compose up -d --build
 
-## Access the Application 
+## Access the Application
 The FastAPI application will be available at http://localhost:8000. Use this URL to interact with the API.
 
 ## Accessing MinIO WebUI
@@ -84,10 +84,10 @@ This interface allows you to view, create, and manage buckets and their contents
 
 ## Troubleshooting
 
-- Container Status: Check the status of your containers: 
+- Container Status: Check the status of your containers:
     ##
         docker compose ps
-- Logs: To view the logs for debugging, use: 
+- Logs: To view the logs for debugging, use:
     ##
         docker compose logs
 
@@ -102,12 +102,12 @@ To clean up everything related to the containers, including volumes and images, 
 
 1. Stop and remove containers:
     ##
-        docker stop app_container minio_container postgres_container  
+        docker stop app_container minio_container postgres_container
     ##
         docker rm app_container minio_container postgres_container
-2. The volumes defined in your _docker-compose.yml_ file are _postgres_data_ and _minio_data_. To remove these volumes, use: 
+2. The volumes defined in your _docker-compose.yml_ file are _postgres_data_ and _minio_data_. To remove these volumes, use:
     ##
         docker volume rm postgres_data minio_data
-3. To remove the images _postgres:latest_ and _minio/minio_ use: 
+3. To remove the images _postgres:latest_ and _minio/minio_ use:
     ##
         docker rmi postgres:latest minio/minio

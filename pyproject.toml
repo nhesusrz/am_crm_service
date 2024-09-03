@@ -28,6 +28,7 @@ fastapi-dependency = "^0.1.0"
 mock-alchemy = "^0.2.6"
 aiosqlite = "^0.20.0"
 pytz = "^2024.1"
+pre-commit = "^3.8.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -36,6 +37,7 @@ pyright = "^1.1.378"
 isort = "^5.13.2"
 black = "^24.8.0"
 pytest-cov = "^5.0.0"
+flake8 = "^7.1.1"
 
 
 [build-system]
@@ -50,7 +52,7 @@ ignore = [
 
 
 [tool.black]
-line-length = 80
+line-length = 79
 include = '''
 /app/ | /tests/ | /scripts/
 '''
@@ -72,6 +74,8 @@ skip = [
     ".venv",
     "__pycache__",
 ]
+profile = "black"
+line_length = 79
 
 
 [tool.pytest.ini_options]
@@ -93,6 +97,8 @@ omit = [
 exclude = [
     "alembic"
 ]
+#line_length = 79
+extend-ignore = ["E203"]
 
 
 [tool.ruff.lint]
@@ -132,3 +138,6 @@ extend-select = [
     "PLR",  # pylint Refactor
     "PLW",  # pylint Warning
 ]
+
+[tool.flake8]
+exclude = ["alembic/*"]

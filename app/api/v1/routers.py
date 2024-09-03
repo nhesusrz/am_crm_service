@@ -9,8 +9,8 @@ Classes:
     - Routers: Manages the instantiation of routers for different endpoints.
 
 Functions:
-    - register_routers(app: FastAPI): Registers all API routers with the FastAPI
-    application.
+    - register_routers(app: FastAPI): Registers all API routers with the
+    FastAPI application.
     - Includes routes for login, users, and customers.
     - Adds a static route for `robots.txt` to control access by web crawlers.
 """
@@ -46,7 +46,8 @@ def register_routers(app: FastAPI):
 
     Args:
     ----
-        app (FastAPI): The FastAPI application instance to register the routers with.
+        app (FastAPI): The FastAPI application instance to register the routers
+        with.
 
     This function includes the routers for login, user management, and customer
     management. It also sets up a route for serving `robots.txt` to control web
@@ -61,7 +62,8 @@ def register_routers(app: FastAPI):
 
         Returns
         -------
-            PlainTextResponse: A plain text response with instructions for web crawlers.
+            PlainTextResponse: A plain text response with instructions for web
+            crawlers.
 
         """
         return """User-agent: *\nDisallow: /"""

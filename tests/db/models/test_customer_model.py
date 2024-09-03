@@ -19,10 +19,10 @@ async def test_create_customer(
 
     Args:
     ----
-        async_db_session (AsyncSession): The SQLAlchemy async session for database
-        interactions.
-        create_user (User): The User fixture that provides a user for the Customer
-        creation.
+        async_db_session (AsyncSession): The SQLAlchemy async session for
+        database interactions.
+        create_user (User): The User fixture that provides a user for the
+        Customer creation.
 
     """
     new_customer = Customer(

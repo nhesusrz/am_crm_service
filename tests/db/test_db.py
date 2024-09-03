@@ -12,7 +12,10 @@ from app.db import db
 
 @pytest.mark.asyncio
 async def test_get_engine():
-    """Test that the get_engine function returns a valid AsyncEngine instance."""
+    """Test that the get_engine function returns a valid AsyncEngine.
+
+    instance.
+    """
     engine = db.get_engine()
     assert engine is not None
     assert isinstance(engine, type(create_async_engine("sqlite+aiosqlite://")))

@@ -1,6 +1,5 @@
 """Alembic configuration file."""
 
-# We need to include asyncio for Async support
 import asyncio
 
 from logging.config import fileConfig
@@ -15,7 +14,8 @@ from alembic import context
 from app.core import settings
 
 # MAKE SURE TO IMPORT ALL MODELS HERE
-# DO NOT CHANGE OR REMOVE THIS IMPORTS! Needed for auto-generation of Alembic migrations
+# DO NOT CHANGE OR REMOVE THIS IMPORTS! Needed for auto-generation of
+# Alembic migrations
 from app.db import base  # noqa
 from app.db import models  # noqa # pylint: disable=unused-import
 
@@ -76,7 +76,9 @@ async def run_async_migrations():
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = settings.load_settings().SQLALCHEMY_DATABASE_URI  # type: ignore
+    configuration["sqlalchemy.url"] = (
+        settings.load_settings().SQLALCHEMY_DATABASE_URI
+    )  # type: ignore
     connectable = async_engine_from_config(
         configuration,  # type: ignore
         prefix="sqlalchemy.",

@@ -17,7 +17,8 @@ Endpoints:
     - POST /customers: Create a new customer.
     - DELETE /customers/{customer_id}: Delete a specific customer by ID.
     - PUT /customers/{customer_id}: Update a specific customer by ID.
-    - PUT /customers/{customer_id}/upload_photo: Upload a photo for a specific customer.
+    - PUT /customers/{customer_id}/upload_photo: Upload a photo for a specific
+    customer.
 """
 
 from typing import List
@@ -49,21 +50,25 @@ class CustomerEndpoints:
     """Customer endpoints."""
 
     def __init__(self):
-        """Initialize the CustomerEndpoints class with routes for managing customers."""
+        """Init the CustomerEndpoints class with routes for customers."""
         self.router = APIRouter(tags=["Customer Management"])
         self.router.add_api_route(
             CUSTOMER_ENDPOINT,
             self.list_customers,
             methods=["GET"],
             response_model=List[CustomerBase],
-            dependencies=[Depends(user_crud.get_current_active_non_admin_user)],
+            dependencies=[
+                Depends(user_crud.get_current_active_non_admin_user),
+            ],
         )
         self.router.add_api_route(
             CUSTOMER_DETAIL_ENDPOINT,
             self.get_customer,
             methods=["GET"],
             response_model=CustomerBase,
-            dependencies=[Depends(user_crud.get_current_active_non_admin_user)],
+            dependencies=[
+                Depends(user_crud.get_current_active_non_admin_user),
+            ],
         )
         self.router.add_api_route(
             CUSTOMER_ENDPOINT,
@@ -75,7 +80,9 @@ class CustomerEndpoints:
             CUSTOMER_DETAIL_ENDPOINT,
             self.delete_customer,
             methods=["DELETE"],
-            dependencies=[Depends(user_crud.get_current_active_non_admin_user)],
+            dependencies=[
+                Depends(user_crud.get_current_active_non_admin_user),
+            ],
         )
         self.router.add_api_route(
             CUSTOMER_DETAIL_ENDPOINT,

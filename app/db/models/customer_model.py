@@ -15,7 +15,12 @@ class Customer(base.Base):
     """Customer model."""
 
     __tablename__ = "customers"  # type: ignore
-    id: orm.Mapped[int] = sa.Column(sa.Integer, primary_key=True, autoincrement=True, index=True)  # type: ignore #noqa
+    id: orm.Mapped[int] = sa.Column(
+        sa.Integer,
+        primary_key=True,
+        autoincrement=True,
+        index=True,
+    )  # type: ignore #noqa
     name: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=False)
     surname: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=False)
     photo_url: orm.Mapped[str | None] = orm.mapped_column(

@@ -1,20 +1,21 @@
 """Customer Schemas Module.
 
-This module defines Pydantic schemas for customer-related data and provides a function
-to convert a database Customer model instance to a schema instance. The schemas
-are used for validating and serializing customer data for API requests and responses.
+This module defines Pydantic schemas for customer-related data and provides
+a function to convert a database Customer model instance to a schema
+instance. The schemas are used for validating and serializing customer data
+for API requests and responses.
 
 Classes:
-- CustomerBase: Base schema for customer data, including ID, name, surname, photo URL,
-and creator/modifier IDs.
-- CustomerCreate: Schema for creating a new customer, extending CustomerBase without
-additional fields.
-- CustomerUpdate: Schema for updating customer information, with optional fields for
-name, surname, photo URL, and modifier ID.
+- CustomerBase: Base schema for customer data, including ID, name, surname,
+photo URL, and creator/modifier IDs.
+- CustomerCreate: Schema for creating a new customer, extending CustomerBase
+without additional fields.
+- CustomerUpdate: Schema for updating customer information, with optional
+fields for name, surname, photo URL, and modifier ID.
 
 Functions:
-- get_customer_schema: Converts a database Customer model instance into a CustomerBase
-schema instance.
+- get_customer_schema: Converts a database Customer model instance into a
+CustomerBase schema instance.
 """
 
 from typing import Optional
@@ -32,9 +33,12 @@ class CustomerBase(BaseModel):
         id (int): The unique identifier of the customer.
         name (str): The name of the customer.
         surname (str): The surname of the customer.
-        photo_url (Optional[str]): The URL of the customer's photo (default: None).
-        creator_id (int): The ID of the user who created the customer record.
-        modifier_id (int): The ID of the user who last modified the customer record.
+        photo_url (Optional[str]): The URL of the customer's photo
+        (default: None).
+        creator_id (int): The ID of the user who created the customer
+        record.
+        modifier_id (int): The ID of the user who last modified the
+        customer record.
 
     Config:
         from_attributes (bool): Allows creation of the schema from ORM models'
@@ -61,9 +65,10 @@ class CustomerCreate(BaseModel):
     Attributes
     ----------
         name (str): The name of the customer (inherited from CustomerBase).
-        surname (str): The surname of the customer (inherited from CustomerBase).
-        photo_url (Optional[str]): The URL of the customer's photo (inherited from
+        surname (str): The surname of the customer (inherited from
         CustomerBase).
+        photo_url (Optional[str]): The URL of the customer's photo
+        (inherited from CustomerBase).
 
     """
 
@@ -78,10 +83,12 @@ class CustomerUpdate(BaseModel):
     Attributes
     ----------
         name (Optional[str]): The new name of the customer, if being updated.
-        surname (Optional[str]): The new surname of the customer, if being updated.
-        photo_url (Optional[str]): The new photo URL of the customer, if being updated.
-        modifier_id (Optional[int]): The ID of the user who is modifying the customer
-        record, if being updated.
+        surname (Optional[str]): The new surname of the customer, if being
+        updated.
+        photo_url (Optional[str]): The new photo URL of the customer, if being
+        updated.
+        modifier_id (Optional[int]): The ID of the user who is modifying
+        the customer record, if being updated.
 
     """
 
@@ -94,7 +101,7 @@ class CustomerUpdate(BaseModel):
 def get_customer_schema(
     db_customer_model: Customer,
 ) -> CustomerBase:
-    """Convert a database Customer model instance to a CustomerBase schema instance.
+    """Convert a database Customer model to a CustomerBase schema instance.
 
     Args:
     ----
@@ -102,7 +109,8 @@ def get_customer_schema(
 
     Returns:
     -------
-        CustomerBase: The CustomerBase schema instance containing the customer's data.
+        CustomerBase: The CustomerBase schema instance containing the
+        customer's data.
 
     """
     return CustomerBase(

@@ -35,7 +35,7 @@ logger = logger.get_logger()
 
 
 class LoginEndpoints:
-    """Define API endpoints for user and admin authentication, and token management."""
+    """Define API endpoints for user, admin, authentication and token mgmt."""
 
     def __init__(self):
         """Initialize the LoginEndpoints class and sets up API routes."""
@@ -68,7 +68,7 @@ class LoginEndpoints:
         form_data: OAuth2PasswordRequestForm = Depends(),  # noqa
         db_session: AsyncSession = Depends(db.get_session),  # noqa
     ) -> TokenResponseModel:
-        """Handle login requests for admin users and returns an access token."""
+        """Handle login req for admin users and returns an access token."""
         db_user = await authenticate_user(
             db_session=db_session,
             username=form_data.username,
@@ -95,7 +95,7 @@ class LoginEndpoints:
         form_data: OAuth2PasswordRequestForm = Depends(),  # noqa
         db_session: AsyncSession = Depends(db.get_session),  # noqa
     ):
-        """Handle login requests for regular users and returns an access token."""
+        """Handle login req for regular users and returns an access token."""
         db_user = await authenticate_user(
             db_session=db_session,
             username=form_data.username,
@@ -112,7 +112,9 @@ class LoginEndpoints:
                 detail="Invalid credentials",
             )
 
-        logger.info(f"User login successful for username: {form_data.username}")
+        logger.info(
+            f"User login successful for username: {form_data.username}",
+        )
         return await self.check_user_db_model(db_user=db_user)
 
     async def refresh_access_token(

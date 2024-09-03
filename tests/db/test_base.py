@@ -35,7 +35,8 @@ def test_timestamps(engine, setup_database):  # noqa
     Args:
     ----
         engine (Engine): The SQLAlchemy engine used for database operations.
-        setup_database (None): Fixture that sets up and tears down the database schema.
+        setup_database (None): Fixture that sets up and tears down the database
+        schema.
 
 
     Asserts
@@ -60,7 +61,8 @@ def test_update_timestamps(engine, setup_database):  # noqa
     Args:
     ----
         engine (Engine): The SQLAlchemy engine used for database operations.
-        setup_database (None): Fixture that sets up and tears down the database schema.
+        setup_database (None): Fixture that sets up and tears down the database
+        schema.
 
 
     Asserts

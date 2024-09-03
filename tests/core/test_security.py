@@ -89,7 +89,10 @@ def test_verify_password_success():
 
 
 def test_verify_password_failure():
-    """Test verifying a password against a hashed password with incorrect password."""
+    """Test verifying a password against a hashed password with incorrect.
+
+    password.
+    """
     result = verify_password("wrongpassword", HASHED_PASSWORD)
 
     assert result is False

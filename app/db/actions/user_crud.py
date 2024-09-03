@@ -1,8 +1,8 @@
 """User CRUD Operations Module.
 
-This module contains functions for performing CRUD (Create, Read, Update, Delete)
-operations on user data. It also includes a function to retrieve the currently
-active admin user based on an OAuth2 token.
+This module contains functions for performing CRUD (Create, Read, Update,
+Delete) operations on user data. It also includes a function to retrieve the
+currently active admin user based on an OAuth2 token.
 
 Functions:
 - get_all_users: Retrieve all users from the database.
@@ -10,7 +10,8 @@ Functions:
 - create_user: Create a new user in the database.
 - delete_user: Delete a user from the database.
 - update_user: Update an existing user's information.
-- get_current_active_admin: Verify an OAuth2 token and return the active admin user.
+- get_current_active_admin: Verify an OAuth2 token and return the active admin
+user.
 
 Dependencies:
 - FastAPI: For handling HTTP requests and OAuth2 token parsing.

@@ -166,9 +166,10 @@ async def test_get_current_active_user():
 
     with patch("app.db.actions.user_crud.verify_token", return_value=user_id):
         mock_result = AlchemyMagicMock()
-        mock_result.unique.return_value.scalars.return_value.first.return_value = (
-            mock_user
-        )
+        mock_scalars = mock_result.unique.return_value.scalars
+        mock_first = mock_scalars.return_value.first
+        mock_first.return_value = mock_user
+
         mock_db_session.execute = AsyncMock(return_value=mock_result)
 
         active_user = await get_current_active_user(
@@ -217,13 +218,18 @@ async def test_get_current_active_user_not_admin():
 
     with patch("app.core.security.verify_token", return_value=user_id):
         mock_result = AsyncMock()
-        mock_result.unique.return_value.scalars.return_value.first.return_value = (
-            non_admin_user
-        )
+        mock_scalars = mock_result.unique.return_value.scalars
+        mock_first = mock_scalars.return_value.first
+        mock_first.return_value = non_admin_user
+
         mock_db_session.execute = AsyncMock(return_value=mock_result)
 
         with pytest.raises(HTTPException) as excinfo:
-            await get_current_active_user(token, mock_db_session, is_admin=True)
+            await get_current_active_user(
+                token,
+                mock_db_session,
+                is_admin=True,
+            )
 
     assert excinfo.value.status_code == status.HTTP_401_UNAUTHORIZED
     assert excinfo.value.detail == "Invalid token"

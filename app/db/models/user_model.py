@@ -15,7 +15,11 @@ class User(base.Base):
     """User model."""
 
     __tablename__ = "users"  # type: ignore
-    id: orm.Mapped[int] = sa.Column(sa.Integer, primary_key=True, autoincrement=True)  # type: ignore
+    id: orm.Mapped[int] = sa.Column(
+        sa.Integer,
+        primary_key=True,
+        autoincrement=True,
+    )  # type: ignore
     username: orm.Mapped[str] = orm.mapped_column(
         sa.String,
         nullable=False,

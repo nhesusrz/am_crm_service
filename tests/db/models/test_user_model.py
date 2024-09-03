@@ -15,8 +15,8 @@ async def test_create_user(async_db_session: AsyncSession):
 
     Args:
     ----
-        async_db_session (AsyncSession): The SQLAlchemy async session object for
-        database operations.
+        async_db_session (AsyncSession): The SQLAlchemy async session object
+        for database operations.
 
     """
     user = User(username="testuser", hashed_password="hashedpassword123")

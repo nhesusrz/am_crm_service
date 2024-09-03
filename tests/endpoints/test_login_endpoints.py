@@ -35,7 +35,10 @@ async def test_admin_login_success(mocker, async_client):
         ),
     )
 
-    form_data = OAuth2PasswordRequestForm(username="admin", password="password")
+    form_data = OAuth2PasswordRequestForm(
+        username="admin",
+        password="password",
+    )
     data = {"username": form_data.username, "password": form_data.password}
 
     response = await async_client.post(url=ADMIN_LOGIN_ENDPOINT, data=data)
@@ -81,7 +84,9 @@ async def test_admin_login_failure(mocker, async_client):
 
 @pytest.mark.asyncio
 async def test_user_login_success(mocker, async_client):
-    """Test successful user login by mocking the response from the /login endpoint.
+    """Test successful user login by mocking the response from the.
+
+    /login endpoint.
 
     Args:
     ----
@@ -115,7 +120,9 @@ async def test_user_login_success(mocker, async_client):
 
 @pytest.mark.asyncio
 async def test_user_login_failure(mocker, async_client):
-    """Test user login failure by mocking a 401 error response from the /login endpoint.
+    """Test user login failure by mocking a 401 error response from the.
+
+    /login endpoint.
 
     Args:
     ----

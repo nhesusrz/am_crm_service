@@ -40,7 +40,7 @@ class UserEndpoints:
     """User endpoints."""
 
     def __init__(self):
-        """Initialize the UserEndpoints class with routes for managing users."""
+        """Init the UserEndpoints class with routes for managing users."""
         self.router = APIRouter(tags=["User Management"])
         self.router.add_api_route(
             USER_ENDPOINT,

@@ -42,8 +42,8 @@ async def mocked_get_current_active_user():
 
     Returns
     -------
-        User: A `User` object representing a mocked active user with ID 123, username
-        "admin", and `is_admin` set to `False`.
+        User: A `User` object representing a mocked active user with ID 123,
+        username "admin", and `is_admin` set to `False`.
 
     """
     return User(id=123, username="admin", is_admin=False)
@@ -68,7 +68,10 @@ async def async_client() -> AsyncClient:  # type: ignore
 
 
 @pytest.fixture
-async def authenticated_user_client(mocker, async_client: AsyncClient) -> AsyncClient:  # type: ignore
+async def authenticated_user_client(
+    mocker,
+    async_client: AsyncClient,
+) -> AsyncClient:  # type: ignore
     """Fixture for creating an authenticated HTTP client for a regular user.
 
     Args:
@@ -120,7 +123,10 @@ async def authenticated_user_client(mocker, async_client: AsyncClient) -> AsyncC
 
 
 @pytest.fixture
-async def authenticated_admin_client(mocker, async_client: AsyncClient) -> AsyncClient:  # type: ignore
+async def authenticated_admin_client(
+    mocker,
+    async_client: AsyncClient,
+) -> AsyncClient:  # type: ignore
     """Fixture for creating an authenticated HTTP client for an admin user.
 
     Args:
@@ -155,7 +161,10 @@ async def authenticated_admin_client(mocker, async_client: AsyncClient) -> Async
 
     mocker.patch("httpx.AsyncClient.post", side_effect=mock_post)
 
-    form_data = OAuth2PasswordRequestForm(username="admin", password="password")
+    form_data = OAuth2PasswordRequestForm(
+        username="admin",
+        password="password",
+    )
     data = {"username": form_data.username, "password": form_data.password}
     token_response = await async_client.post(ADMIN_LOGIN_ENDPOINT, data=data)
     access_token = token_response.json()["access_token"]

@@ -18,13 +18,13 @@ async def create_default_admin(db_session: AsyncSession):
 
     Args:
     ----
-        db_session (AsyncSession): The SQLAlchemy asynchronous session used to interact
-        with the database.
+        db_session (AsyncSession): The SQLAlchemy asynchronous session used to
+        interact with the database.
 
     Returns:
     -------
-        None: The function does not return a value but prints messages to indicate
-        the outcome.
+        None: The function does not return a value but prints messages to
+        indicate the outcome.
 
     """
     query = select(func.count()).select_from(User).filter(User.is_admin)

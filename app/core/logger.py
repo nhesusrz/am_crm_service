@@ -55,7 +55,8 @@ def get_logger(namespace: str = DEFAULT_LOGGER_NAMESPACE) -> logging.Logger:
 
     Returns:
     -------
-        A logger instance configured for the specified namespace with INFO level.
+        A logger instance configured for the specified namespace with INFO
+        level.
 
     """
     # Create a new logger instance with the specified namespace

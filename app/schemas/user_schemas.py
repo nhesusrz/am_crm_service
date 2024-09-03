@@ -1,19 +1,21 @@
 """User Schemas Module.
 
-This module defines Pydantic schemas for user-related data and provides a function
-to convert a database User model instance to a schema instance. The schemas
-are used for validating and serializing user data for API requests and responses.
+This module defines Pydantic schemas for user-related data and provides
+a function to convert a database User model instance to a schema
+instance. The schemas are used for validating and serializing user
+data for API requests and responses.
 
 Classes:
-- UserBase: Base schema for user data, including ID, username, and admin status.
-- UserCreateRequest: Schema for creating a new user, extending UserBase and adding
-  a password field.
-- UserUpdate: Schema for updating user information, with optional fields for username,
-  admin status, and password.
+- UserBase: Base schema for user data, including ID, username, and admin
+status.
+- UserCreateRequest: Schema for creating a new user, extending UserBase
+and adding a password field.
+- UserUpdate: Schema for updating user information, with optional fields
+for username, admin status, and password.
 
 Functions:
-- get_user_schema: Converts a database User model instance into a UserBase schema
-instance.
+- get_user_schema: Converts a database User model instance into a UserBase
+schema instance.
 """
 
 from typing import Optional
@@ -30,10 +32,12 @@ class UserBase(BaseModel):
     ----------
         id (int): The unique identifier of the user.
         username (str): The username of the user.
-        is_admin (bool): Indicates if the user has admin privileges (default: False).
+        is_admin (bool): Indicates if the user has admin privileges
+         (default: False).
 
     Config:
-        from_attributes (bool): Allows creation of the schema from ORM models'
+        from_attributes (bool): Allows creation of the schema from
+        ORM models'
         attributes.
 
     """
@@ -70,9 +74,12 @@ class UserUpdate(BaseModel):
 
     Attributes
     ----------
-        username (Optional[str]): The new username of the user, if being updated.
-        is_admin (Optional[bool]): The new admin status of the user, if being updated.
-        password (Optional[str]): The new password of the user, if being updated.
+        username (Optional[str]): The new username of the user,
+        if being updated.
+        is_admin (Optional[bool]): The new admin status of the user,
+        if being updated.
+        password (Optional[str]): The new password of the user, if being
+        updated.
 
     """
 

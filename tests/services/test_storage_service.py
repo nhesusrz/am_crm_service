@@ -14,7 +14,9 @@ async def test_s3_client_upload_file(  # noqa
     mock_session,
     s3_client,
 ):
-    """Test the upload_file method of S3Client to ensure it uploads files correctly.
+    """Test the upload_file method of S3Client to ensure it uploads files.
+
+    correctly.
 
     Args:
     ----
@@ -76,7 +78,8 @@ async def test_s3_client_existing_bucket(  # noqa
         s3_client (S3Client): The S3Client singleton instance.
 
     Asserts:
-        None: Ensures the existing bucket is not recreated and file is uploaded.
+        None: Ensures the existing bucket is not recreated and the file is
+        uploaded.
 
     """
     # Mock settings
@@ -132,7 +135,8 @@ async def test_s3_client_upload_file_error(  # noqa
         s3_client (S3Client): The S3Client singleton instance.
 
     Asserts:
-        None: Ensures that exceptions are properly raised during the upload process.
+        None: Ensures that exceptions are properly raised during the upload
+        process.
 
     """
     mock_load_settings.return_value.MINIO_PHOTO_BUCKET_NAME = "test-bucket"

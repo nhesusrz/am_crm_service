@@ -19,9 +19,10 @@ async def test_list_users_success(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     db_user_1 = User(id=1, username="user1", is_admin=False)
@@ -54,9 +55,10 @@ async def test_list_users_empty(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     mocker.patch("app.db.actions.user_crud.get_all_users", return_value=[])
@@ -77,9 +79,10 @@ async def test_get_user_success(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     mock_user = User(id=1, username="user1", is_admin=False)
@@ -105,9 +108,10 @@ async def test_get_user_failure(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     mocker.patch("app.db.actions.user_crud.get_user", return_value=None)
@@ -126,9 +130,10 @@ async def test_create_user(mocker, authenticated_admin_client: AsyncClient):
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     user_create_payload = user_schemas.UserCreate(
@@ -166,9 +171,10 @@ async def test_delete_user_success(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     db_user = User(id=1, username="user1", is_admin=False)
@@ -192,9 +198,10 @@ async def test_delete_user_failure(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     mocker.patch("app.db.actions.user_crud.get_user", return_value=None)
@@ -216,9 +223,10 @@ async def test_update_user_success(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     db_user = User(
@@ -267,9 +275,10 @@ async def test_update_user_failure(
 
     Args:
     ----
-        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking functions.
-        authenticated_admin_client (AsyncClient): Async HTTP client fixture with admin
-        authentication.
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking
+        functions.
+        authenticated_admin_client (AsyncClient): Async HTTP client fixture
+        with admin authentication.
 
     """
     mocker.patch("app.db.actions.user_crud.get_user", return_value=None)

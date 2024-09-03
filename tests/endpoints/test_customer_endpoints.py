@@ -128,7 +128,10 @@ async def test_get_customer_failure(mocker, authenticated_user_client):
         authenticated_user_client (AsyncClient): Async HTTP client fixture.
 
     """
-    mocker.patch("app.db.actions.customer_crud.get_customer", return_value=None)
+    mocker.patch(
+        "app.db.actions.customer_crud.get_customer",
+        return_value=None,
+    )
 
     response = await authenticated_user_client.get(
         url=CUSTOMER_DETAIL_ENDPOINT.format(customer_id=1),
@@ -221,7 +224,10 @@ async def test_delete_customer_failure(mocker, authenticated_user_client):
         authenticated_user_client (AsyncClient): Async HTTP client fixture.
 
     """
-    mocker.patch("app.db.actions.customer_crud.get_customer", return_value=None)
+    mocker.patch(
+        "app.db.actions.customer_crud.get_customer",
+        return_value=None,
+    )
 
     response = await authenticated_user_client.delete(
         url=CUSTOMER_DETAIL_ENDPOINT.format(customer_id=1),
@@ -297,7 +303,10 @@ async def test_update_customer_failure(mocker, authenticated_user_client):
         authenticated_user_client (AsyncClient): Async HTTP client fixture.
 
     """
-    mocker.patch("app.db.actions.customer_crud.get_customer", return_value=None)
+    mocker.patch(
+        "app.db.actions.customer_crud.get_customer",
+        return_value=None,
+    )
 
     payload = {
         "name": "Customer 1 Updated",

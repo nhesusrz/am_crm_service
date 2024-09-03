@@ -1,10 +1,11 @@
 """S3 Client Module.
 
-This module defines the `S3Client` class, which is a singleton designed to interact
-with an S3-compatible storage service. The class provides functionality to upload
-files to a specified S3 bucket and manage bucket creation. The `S3Client` uses
-configuration settings for initialization and ensures that only one instance of
-the client is used throughout the application to maintain consistency and avoid
+This module defines the `S3Client` class, which is a singleton designed
+to interact with an S3-compatible storage service. The class provides
+functionality to upload files to a specified S3 bucket and manage
+bucket creation. The `S3Client` uses configuration settings for
+initialization and ensures that only one instance of the client
+is used throughout the application to maintain consistency and avoid
 potential conflicts.
 
 Imports:
@@ -14,8 +15,8 @@ Imports:
 - app.core.settings: Configuration settings for the S3 client.
 
 Classes:
-- S3Client: Singleton class for managing the S3 client instance and providing methods to
-  upload files and manage buckets.
+- S3Client: Singleton class for managing the S3 client instance and
+providing methods to upload files and manage buckets.
 """
 
 import asyncio

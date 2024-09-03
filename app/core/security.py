@@ -6,12 +6,13 @@ and authenticating users against a database. It uses the `jose` library for
 JWT operations and `passlib` for password hashing.
 
 Functions:
-    - create_access_token(user_id: int, expires_delta: Union[timedelta, None] = None):
-        Creates an access token for a given user ID with an optional expiration time.
+    - create_access_token(user_id: int, expires_delta: Union[timedelta, None] =
+    None): Creates an access token for a given user ID with an optional
+    expiration time.
 
     - verify_token(token: str):
-        Verifies a JWT token and extracts the user ID from it. Raises an HTTPException
-        if the token is invalid.
+        Verifies a JWT token and extracts the user ID from it. Raises an H
+        TTPException if the token is invalid.
 
     - hash_password(password: str) -> str:
         Hashes a plain password using bcrypt.
@@ -21,8 +22,8 @@ Functions:
 
     - authenticate_user(db_session: AsyncSession, username: str, password: str,
     is_admin: bool = False):
-        Authenticates a user based on username and password, optionally checking
-        if the user is an admin.
+        Authenticates a user based on username and password, optionally
+        checking if the user is an admin.
         Returns the user object if authentication is successful, otherwise
         returns False.
 
