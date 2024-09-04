@@ -25,7 +25,11 @@ from app.db.actions.user_crud import get_current_active_user
 from app.db.base import Base
 from app.db.models.user_model import User
 from app.services.storage_service import S3Client
-from tests.core.test_security import TOKEN_ALGORITHM, TOKEN_SECRET_KEY
+from tests.core.test_security import (
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    TOKEN_ALGORITHM,
+    TOKEN_SECRET_KEY,
+)
 from tests.db.models.test_customer_model import DATABASE_URL
 
 app = FastAPI()
@@ -175,7 +179,7 @@ async def authenticated_admin_client(
 
 
 @pytest.fixture
-def mock_settings():
+def mock_app_settings():
     """Mock settings for testing security functions.
 
     Yields
@@ -183,10 +187,10 @@ def mock_settings():
         mock: The patched mock object with test settings.
 
     """
-    with patch("app.core.settings.load_settings") as mock:
-        mock.return_value.TOKEN_SECRET_KEY = TOKEN_SECRET_KEY
-        mock.return_value.TOKEN_ALGORITHM = TOKEN_ALGORITHM
-        mock.return_value.ACCESS_TOKEN_EXPIRE_MINUTES = 15
+    with patch("app.core.security.app_settings") as mock:
+        mock.TOKEN_SECRET_KEY = TOKEN_SECRET_KEY
+        mock.TOKEN_ALGORITHM = TOKEN_ALGORITHM
+        mock.ACCESS_TOKEN_EXPIRE_MINUTES = ACCESS_TOKEN_EXPIRE_MINUTES
         yield mock
 
 

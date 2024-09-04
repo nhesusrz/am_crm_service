@@ -1,5 +1,6 @@
 """Storage service tests."""
 
+import mimetypes
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -45,8 +46,11 @@ async def test_s3_client_upload_file(  # noqa
     mock_s3.put_object.return_value = {}
 
     file_bytes = b"test file content"
-    file_name = "test_file.txt"
+    file_name = "test_file.jpg"
     bucket_name = "test-bucket"
+    content_type, _ = (
+        mimetypes.guess_type(file_name) or "application/octet-stream"
+    )
 
     expected_url = f"http://localhost:9000/{bucket_name}/{file_name}"
 
@@ -58,6 +62,8 @@ async def test_s3_client_upload_file(  # noqa
         Bucket=bucket_name,
         Key=file_name,
         Body=file_bytes,
+        ContentType=content_type,
+        ContentDisposition="inline",
     )
 
 
@@ -84,10 +90,10 @@ async def test_s3_client_existing_bucket(  # noqa
     """
     # Mock settings
     mock_load_settings.return_value.MINIO_PHOTO_BUCKET_NAME = "test-bucket"
-    mock_load_settings.return_value.MINIO_HOST = "localhost"
+    mock_load_settings.return_value.MINIO_ACCESS_HOST = "localhost"
     mock_load_settings.return_value.MINIO_PORT = "9000"
-    mock_load_settings.return_value.AWS_ACCESS_KEY_ID = "test-access-key"
-    mock_load_settings.return_value.AWS_SECRET_ACCESS_KEY = "test-secret-key"
+    mock_load_settings.return_value.MINIO_ACCESS_KEY_ID = "test-access-key"
+    mock_load_settings.return_value.MINIO_SECRET_ACCESS_KEY = "test-secret-key"
     mock_load_settings.return_value.MINIO_SIGNATURE_VERSION = "s3v4"
     mock_load_settings.return_value.MINIO_SERVICE_NAME = "s3"
 
@@ -101,10 +107,17 @@ async def test_s3_client_existing_bucket(  # noqa
     mock_s3.put_object.return_value = {}
 
     file_bytes = b"test file content"
-    file_name = "test_file.txt"
+    external_host = "localhost"
+    external_port = 9000
+    file_name = "test_file.jpg"
     bucket_name = "test-bucket"
+    content_type, _ = (
+        mimetypes.guess_type(file_name) or "application/octet-stream"
+    )
 
-    expected_url = f"http://localhost:9000/{bucket_name}/{file_name}"
+    expected_url = (
+        f"http://{external_host}:{external_port}/{bucket_name}/{file_name}"
+    )
 
     # Test upload_file
     url = await s3_client.upload_file(bucket_name, file_bytes, file_name)
@@ -115,6 +128,8 @@ async def test_s3_client_existing_bucket(  # noqa
         Bucket=bucket_name,
         Key=file_name,
         Body=file_bytes,
+        ContentType=content_type,
+        ContentDisposition="inline",
     )
 
 
@@ -140,7 +155,7 @@ async def test_s3_client_upload_file_error(  # noqa
 
     """
     mock_load_settings.return_value.MINIO_PHOTO_BUCKET_NAME = "test-bucket"
-    mock_load_settings.return_value.MINIO_HOST = "localhost"
+    mock_load_settings.return_value.MINIO_ACCESS_HOST = "localhost"
     mock_load_settings.return_value.MINIO_PORT = "9000"
     mock_load_settings.return_value.AWS_ACCESS_KEY_ID = "test-access-key"
     mock_load_settings.return_value.AWS_SECRET_ACCESS_KEY = "test-secret-key"
@@ -166,8 +181,11 @@ async def test_s3_client_upload_file_error(  # noqa
     )
 
     file_bytes = b"test file content"
-    file_name = "test_file.txt"
+    file_name = "test_file.jpg"
     bucket_name = "test-bucket"
+    content_type, _ = (
+        mimetypes.guess_type(file_name) or "application/octet-stream"
+    )
 
     # Ensure that ClientError is raised due to put_object error
     with pytest.raises(ClientError):
@@ -180,4 +198,6 @@ async def test_s3_client_upload_file_error(  # noqa
         Bucket=bucket_name,
         Key=file_name,
         Body=file_bytes,
+        ContentType=content_type,
+        ContentDisposition="inline",
     )

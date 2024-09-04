@@ -27,6 +27,7 @@ EXPECTED_MINIO_ACCESS_KEY_ID = "minioadmin"
 EXPECTED_MINIO_SECRET_ACCESS_KEY = "minioadmin"
 EXPECTED_MINIO_SIGNATURE_VERSION = "s3v4"
 EXPECTED_MINIO_PHOTO_BUCKET_NAME = "profile-folder"
+EXPECTED_MINIO_ACCESS_HOST = "localhost"
 
 
 def test_default_settings(settings=None):
@@ -56,6 +57,7 @@ def test_default_settings(settings=None):
     assert settings.MINIO_SECRET_ACCESS_KEY == EXPECTED_MINIO_SECRET_ACCESS_KEY
     assert settings.MINIO_SIGNATURE_VERSION == EXPECTED_MINIO_SIGNATURE_VERSION
     assert settings.MINIO_PHOTO_BUCKET_NAME == EXPECTED_MINIO_PHOTO_BUCKET_NAME
+    assert settings.MINIO_ACCESS_HOST == EXPECTED_MINIO_ACCESS_HOST
 
 
 def test_assemble_db_url():

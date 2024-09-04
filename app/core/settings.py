@@ -104,6 +104,10 @@ class Settings(BaseSettings):
         validation_alias="MINIO_PHOTO_BUCKET_NAME",
         default="profile-folder",
     )
+    MINIO_ACCESS_HOST: str = Field(
+        validation_alias="MINIO_ACCESS_HOST",
+        default="localhost",
+    )
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
     @classmethod

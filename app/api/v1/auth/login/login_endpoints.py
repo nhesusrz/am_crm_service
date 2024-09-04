@@ -32,6 +32,7 @@ REFRESH_TOKEN_ENDPOINT = "/token/refresh"
 ADMIN_LOGIN_ENDPOINT = "/admin/login"
 
 logger = logger.get_logger()
+app_settings = settings.load_settings()
 
 
 class LoginEndpoints:
@@ -132,7 +133,7 @@ class LoginEndpoints:
                     headers={"WWW-Authenticate": "Bearer"},
                 )
             access_token_expires = timedelta(
-                minutes=settings.load_settings().ACCESS_TOKEN_EXPIRE_MINUTES,
+                minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES,
             )
             new_access_token = await create_access_token(
                 user_id=username,
@@ -163,7 +164,7 @@ class LoginEndpoints:
                 headers={"WWW-Authenticate": "Bearer"},
             )
         access_token_expires = timedelta(
-            minutes=settings.load_settings().ACCESS_TOKEN_EXPIRE_MINUTES,
+            minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         )
         access_token = await create_access_token(
             user_id=db_user.id,

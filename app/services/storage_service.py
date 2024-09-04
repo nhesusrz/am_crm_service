@@ -20,6 +20,8 @@ providing methods to upload files and manage buckets.
 """
 
 import asyncio
+import json
+import mimetypes
 
 import aioboto3
 from botocore.client import Config
@@ -27,6 +29,23 @@ from botocore.client import Config
 from app.core import logger, settings
 
 logger = logger.get_logger()
+app_settings = settings.load_settings()
+
+public_bucket_policy = json.dumps(
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:GetObject",
+                "Resource": f"arn:aws:s3:::{
+                    app_settings.MINIO_PHOTO_BUCKET_NAME
+                }/*",
+            },
+        ],
+    },
+)
 
 
 class S3Client:
@@ -36,13 +55,14 @@ class S3Client:
     _init_lock = asyncio.Lock()
 
     # Load settings once and store them in class-level constants
-    _settings = settings.load_settings()
-    _minio_service_name = _settings.MINIO_SERVICE_NAME
-    _minio_bucket_name = _settings.MINIO_PHOTO_BUCKET_NAME
-    _endpoint_url = f"http://{_settings.MINIO_HOST}:{_settings.MINIO_PORT}"
-    _minio_access_key_id = _settings.MINIO_ACCESS_KEY_ID
-    _minio_secret_access_key = _settings.MINIO_SECRET_ACCESS_KEY
-    _minio_signature_version = _settings.MINIO_SIGNATURE_VERSION
+    _minio_service_name = app_settings.MINIO_SERVICE_NAME
+    _minio_bucket_name = app_settings.MINIO_PHOTO_BUCKET_NAME
+    _endpoint_url = (
+        f"http://{app_settings.MINIO_ACCESS_HOST}:{app_settings.MINIO_PORT}"
+    )
+    _minio_access_key_id = app_settings.MINIO_ACCESS_KEY_ID
+    _minio_secret_access_key = app_settings.MINIO_SECRET_ACCESS_KEY
+    _minio_signature_version = app_settings.MINIO_SIGNATURE_VERSION
 
     def __new__(cls):
         """Create or return the singleton instance of the S3Client class.
@@ -98,17 +118,27 @@ class S3Client:
                 ]:
                     try:
                         await s3.create_bucket(Bucket=bucket_name)
+                        await s3.put_bucket_policy(
+                            Bucket=bucket_name,
+                            Policy=public_bucket_policy,
+                        )
                     except Exception as e:
                         logger.error(f"Error creating bucket: {e}")
                         raise e
                     logger.info(f"Bucket '{bucket_name}' created.")
                 else:
                     logger.info(f"Bucket '{bucket_name}' already exists.")
+                content_type, _ = (
+                    mimetypes.guess_type(file_name)
+                    or "application/octet-stream"
+                )
                 try:
                     await s3.put_object(
                         Bucket=bucket_name,
                         Key=file_name,
                         Body=file_bytes,
+                        ContentType=content_type,
+                        ContentDisposition="inline",
                     )
                 except Exception as e:
                     logger.error(f"Error uploading the file: {e}")

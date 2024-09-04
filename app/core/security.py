@@ -52,9 +52,10 @@ from app.core import logger, settings
 from app.db.models.user_model import User
 
 logger = logger.get_logger()
+app_settings = settings.load_settings()
 
 pwd_context = CryptContext(
-    schemes=[settings.load_settings().PASS_ALGORITHM],
+    schemes=[app_settings.PASS_ALGORITHM],
     deprecated="auto",
 )
 
@@ -70,15 +71,15 @@ async def create_access_token(
         expire = datetime.now(pytz.utc) + expires_delta
     else:
         expire = datetime.now(pytz.utc) + timedelta(
-            minutes=settings.load_settings().ACCESS_TOKEN_EXPIRE_MINUTES,
+            minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         )
 
     to_encode["exp"] = int(expire.timestamp())
 
     token = jwt.encode(
         to_encode,
-        settings.load_settings().TOKEN_SECRET_KEY,
-        algorithm=settings.load_settings().TOKEN_ALGORITHM,
+        app_settings.TOKEN_SECRET_KEY,
+        algorithm=app_settings.TOKEN_ALGORITHM,
     )
     logger.info(f"Access token created with expiration time: {expire}")
     return token
@@ -95,8 +96,8 @@ async def verify_token(token: str) -> int:
     try:
         payload = jwt.decode(
             token,
-            settings.load_settings().TOKEN_SECRET_KEY,
-            algorithms=[settings.load_settings().TOKEN_ALGORITHM],
+            app_settings.TOKEN_SECRET_KEY,
+            algorithms=[app_settings.TOKEN_ALGORITHM],
         )
         user_id = payload.get("id")
         if user_id is None:

@@ -21,6 +21,7 @@ USER_ID = 1
 EXPIRES_DELTA = timedelta(minutes=30)
 TOKEN_SECRET_KEY = "test_secret_key"
 TOKEN_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
 USERNAME = "testuser"
 PASSWORD = "testpassword"
 HASHED_PASSWORD = hash_password(PASSWORD)
@@ -28,7 +29,7 @@ INVALID_TOKEN = "invalid_token"
 
 
 @pytest.mark.asyncio
-async def test_create_access_token(mock_settings):  # noqa
+async def test_create_access_token(mock_app_settings):  # noqa
     """Test creating an access token with a valid user ID and expiration time.
 
     Args:
@@ -40,13 +41,17 @@ async def test_create_access_token(mock_settings):  # noqa
 
     assert token is not None
     assert isinstance(token, str)
-    # Decode the token to verify its content
-    payload = jwt.decode(token, TOKEN_SECRET_KEY, algorithms=[TOKEN_ALGORITHM])
+
+    payload = jwt.decode(
+        token,
+        mock_app_settings.TOKEN_SECRET_KEY,
+        algorithms=[mock_app_settings.TOKEN_ALGORITHM],
+    )
     assert payload.get("id") == USER_ID
 
 
 @pytest.mark.asyncio
-async def test_verify_token_success(mock_settings):  # noqa
+async def test_verify_token_success(mock_app_settings):  # noqa
     """Test verifying a valid token.
 
     Args:
@@ -61,7 +66,7 @@ async def test_verify_token_success(mock_settings):  # noqa
 
 
 @pytest.mark.asyncio
-async def test_verify_token_invalid_token(mock_settings):  # noqa
+async def test_verify_token_invalid_token(mock_app_settings):  # noqa
     """Test verifying an invalid token raises an HTTPException.
 
     Args:

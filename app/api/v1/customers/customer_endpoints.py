@@ -44,6 +44,7 @@ CUSTOMER_DETAIL_ENDPOINT = "/customers/{customer_id}"
 CUSTOMER_UPLOAD_PHOTO_ENDPOINT = "/customers/{customer_id}/upload_photo"
 
 logger = logger.get_logger()
+app_settings = settings.load_settings()
 
 
 class CustomerEndpoints:
@@ -263,7 +264,7 @@ class CustomerEndpoints:
         try:
             s3_client = S3Client()
             photo_url = await s3_client.upload_file(
-                bucket_name=settings.load_settings().MINIO_PHOTO_BUCKET_NAME,
+                bucket_name=app_settings.MINIO_PHOTO_BUCKET_NAME,
                 file_bytes=file_bytes,
                 file_name=file_name,
             )
