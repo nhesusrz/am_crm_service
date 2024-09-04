@@ -58,11 +58,12 @@ class S3Client:
     _minio_service_name = app_settings.MINIO_SERVICE_NAME
     _minio_bucket_name = app_settings.MINIO_PHOTO_BUCKET_NAME
     _endpoint_url = (
-        f"http://{app_settings.MINIO_ACCESS_HOST}:{app_settings.MINIO_PORT}"
+        f"http://{app_settings.MINIO_HOST}:{app_settings.MINIO_PORT}"
     )
     _minio_access_key_id = app_settings.MINIO_ACCESS_KEY_ID
     _minio_secret_access_key = app_settings.MINIO_SECRET_ACCESS_KEY
     _minio_signature_version = app_settings.MINIO_SIGNATURE_VERSION
+    _minio_access_host = app_settings.MINIO_ACCESS_HOST
 
     def __new__(cls):
         """Create or return the singleton instance of the S3Client class.
@@ -132,16 +133,17 @@ class S3Client:
                     mimetypes.guess_type(file_name)
                     or "application/octet-stream"
                 )
+                content_disposition = "inline"
                 try:
                     await s3.put_object(
                         Bucket=bucket_name,
                         Key=file_name,
                         Body=file_bytes,
                         ContentType=content_type,
-                        ContentDisposition="inline",
+                        ContentDisposition=content_disposition,
                     )
                 except Exception as e:
                     logger.error(f"Error uploading the file: {e}")
                     raise e
                 logger.info(f"The file '{file_name}' is already uploaded.")
-                return f"{self._endpoint_url}/{bucket_name}/{file_name}"
+                return f"{self._minio_access_host}/{bucket_name}/{file_name}"

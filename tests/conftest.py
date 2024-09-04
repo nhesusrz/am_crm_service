@@ -1,6 +1,6 @@
 """Conftest file for Pytest module."""
 
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 from fastapi import FastAPI, status
@@ -31,6 +31,7 @@ from tests.core.test_security import (
     TOKEN_SECRET_KEY,
 )
 from tests.db.models.test_customer_model import DATABASE_URL
+from tests.services.test_storage_service import COMMON_SETTINGS
 
 app = FastAPI()
 login_endpoints = LoginEndpoints()
@@ -285,3 +286,86 @@ def s3_client():
 
     """
     return S3Client()
+
+
+@pytest.fixture
+def mock_settings(mock_load_settings):
+    """Fixture to set up mocked settings.
+
+    Args:
+    ----
+        mock_load_settings (MagicMock): Mocked load_settings function.
+
+    """
+    for key, value in COMMON_SETTINGS.items():
+        setattr(mock_load_settings.return_value, key, value)
+
+
+@pytest.fixture
+def mock_s3_no_buckets():
+    """Fixture to set up the mocked S3 client with no buckets.
+
+    Returns
+    -------
+        AsyncMock: Mocked S3 client with methods pre-configured.
+
+    """
+    mock_s3 = AsyncMock()
+    mock_s3.list_buckets.return_value = {"Buckets": []}
+    mock_s3.create_bucket.return_value = {}
+    mock_s3.put_object.return_value = {}
+    return mock_s3
+
+
+@pytest.fixture
+def mock_session_no_buckets(mock_s3_no_buckets):
+    """Fixture to set up the mocked aioboto3 Session with no buckets.
+
+    Args:
+    ----
+        mock_s3_no_buckets (AsyncMock): Mocked S3 client fixture.
+
+    Returns
+    -------
+        MagicMock: Mocked aioboto3 Session class.
+
+    """
+    with patch("aioboto3.Session") as mock_session:
+        mock_client = mock_session.return_value.client.return_value
+        mock_client.__aenter__.return_value = mock_s3_no_buckets
+        yield mock_session
+
+
+@pytest.fixture
+def mock_s3_existing_bucket():
+    """Fixture to set up the mocked S3 client.
+
+    Returns
+    -------
+        AsyncMock: Mocked S3 client with methods pre-configured.
+
+    """
+    mock_s3 = AsyncMock()
+    mock_s3.list_buckets.return_value = {"Buckets": [{"Name": "test-bucket"}]}
+    mock_s3.create_bucket.return_value = {}
+    mock_s3.put_object.return_value = {}
+    return mock_s3
+
+
+@pytest.fixture
+def mock_session_with_buckets(mock_s3_existing_bucket):
+    """Fixture to set up the mocked aioboto3 Session with an existing bucket.
+
+    Args:
+    ----
+        mock_s3_existing_bucket (AsyncMock): Mocked S3 client fixture.
+
+    Returns
+    -------
+        MagicMock: Mocked aioboto3 Session class.
+
+    """
+    with patch("aioboto3.Session") as mock_session:
+        mock_client = mock_session.return_value.client.return_value
+        mock_client.__aenter__.return_value = mock_s3_existing_bucket
+        yield mock_session

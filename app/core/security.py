@@ -64,7 +64,20 @@ async def create_access_token(
     user_id: int,
     expires_delta: Union[timedelta, None] = None,
 ) -> str:
-    """Create a JSON Web Token (JWT) for the given user ID."""
+    """Create a JSON Web Token (JWT) for the given user ID.
+
+    Args:
+    ----
+        user_id (int): The ID of the user for whom the token is created.
+        expires_delta (Union[timedelta, None], optional): The duration for
+        which the token is valid. If None, defaults to the configured
+         token expiration time.
+
+    Returns:
+    -------
+        str: The encoded JWT as a string.
+
+    """
     logger.info(f"Creating access token for user ID: {user_id}")
     to_encode = {"id": user_id}
     if expires_delta:
@@ -86,7 +99,22 @@ async def create_access_token(
 
 
 async def verify_token(token: str) -> int:
-    """Verify a JSON Web Token (JWT) and extract the user ID."""
+    """Verify a JSON Web Token (JWT) and extract the user ID.
+
+    Args:
+    ----
+        token (str): The JWT to be verified.
+
+    Returns:
+    -------
+        int: The user ID extracted from the token.
+
+    Raises:
+    ------
+        HTTPException: If the token is invalid or the user ID is not found
+        in the token.
+
+    """
     logger.info("Verifying token")
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -111,7 +139,17 @@ async def verify_token(token: str) -> int:
 
 
 def hash_password(password: str) -> str:
-    """Hash a plain password using bcrypt."""
+    """Hash a plain password using bcrypt.
+
+    Args:
+    ----
+        password (str): The plain password to be hashed.
+
+    Returns:
+    -------
+        str: The hashed password.
+
+    """
     logger.info("Hashing password")
     hashed_password = pwd_context.hash(password)
     logger.info("Password hashed successfully")
@@ -119,7 +157,19 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a plain password against a hashed password."""
+    """Verify a plain password against a hashed password.
+
+    Args:
+    ----
+        plain_password (str): The plain password to be verified.
+        hashed_password (str): The hashed password to compare against.
+
+    Returns:
+    -------
+        bool: True if the plain password matches the hashed password,
+        False otherwise.
+
+    """
     logger.info("Verifying password")
     is_valid = pwd_context.verify(plain_password, hashed_password)
     if is_valid:
@@ -135,7 +185,27 @@ async def authenticate_user(
     password: str,
     is_admin: bool = False,  # noqa
 ) -> User | None:
-    """Authenticate a user by username and password."""
+    """Authenticate a user by username and password.
+
+    Args:
+    ----
+        db_session (AsyncSession): The database session to use for querying
+        the user.
+        username (str): The username of the user to authenticate.
+        password (str): The password to verify.
+        is_admin (bool, optional): Whether to check for admin privileges.
+        Defaults to False.
+
+    Returns:
+    -------
+        Union[User, None]: The authenticated user object if credentials
+        are valid, otherwise None.
+
+    Raises:
+    ------
+        SQLAlchemyError: If there is an error querying the database.
+
+    """
     logger.info(f"Authenticating user: {username}, is_admin={is_admin}")
     query = select(User).filter(
         User.username == username,
