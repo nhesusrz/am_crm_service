@@ -14,7 +14,7 @@ COMMON_SETTINGS = {
     "MINIO_SECRET_ACCESS_KEY": "test-secret-key",
     "MINIO_SIGNATURE_VERSION": "s3v4",
     "MINIO_SERVICE_NAME": "s3",
-    "MINIO_ACCESS_HOST": "localhost",
+    "MINIO_ACCESS_HOST": "http://localhost:9000",
 }
 
 FILE_BYTES = b"test file content"

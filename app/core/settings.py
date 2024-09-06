@@ -106,7 +106,7 @@ class Settings(BaseSettings):
     )
     MINIO_ACCESS_HOST: str = Field(
         validation_alias="MINIO_ACCESS_HOST",
-        default="localhost",
+        default="http://localhost:9000",
     )
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")

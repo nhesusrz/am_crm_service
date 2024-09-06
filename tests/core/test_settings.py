@@ -27,7 +27,7 @@ EXPECTED_MINIO_ACCESS_KEY_ID = "minioadmin"
 EXPECTED_MINIO_SECRET_ACCESS_KEY = "minioadmin"
 EXPECTED_MINIO_SIGNATURE_VERSION = "s3v4"
 EXPECTED_MINIO_PHOTO_BUCKET_NAME = "profile-folder"
-EXPECTED_MINIO_ACCESS_HOST = "localhost"
+EXPECTED_MINIO_ACCESS_HOST = "http://localhost:9000"
 
 
 def test_default_settings(settings=None):
