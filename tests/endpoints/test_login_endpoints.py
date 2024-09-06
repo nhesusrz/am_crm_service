@@ -84,9 +84,8 @@ async def test_admin_login_failure(mocker, async_client):
 
 @pytest.mark.asyncio
 async def test_user_login_success(mocker, async_client):
-    """Test successful user login by mocking the response from the.
+    """Test successful user login by mocking the response.
 
-    /login endpoint.
 
     Args:
     ----
@@ -120,9 +119,7 @@ async def test_user_login_success(mocker, async_client):
 
 @pytest.mark.asyncio
 async def test_user_login_failure(mocker, async_client):
-    """Test user login failure by mocking a 401 error response from the.
-
-    /login endpoint.
+    """Test user login failure by mocking a 401 error response.
 
     Args:
     ----
@@ -192,9 +189,7 @@ async def test_refresh_token_success(mocker, async_client):
 
 @pytest.mark.asyncio
 async def test_refresh_token_failure(mocker, async_client):
-    """Test refresh token failure by mocking a 401 error response from the.
-
-    /token/refresh endpoint.
+    """Test refresh token failure by mocking a 401 error response.
 
     Args:
     ----

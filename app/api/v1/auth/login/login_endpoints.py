@@ -89,7 +89,7 @@ class LoginEndpoints:
         logger.info(
             f"Admin login successful for username: {form_data.username}",
         )
-        return await self.check_user_db_model(db_user=db_user)
+        return await self._generate_token_response_model(db_user=db_user)
 
     async def user_login_for_access_token(
         self,
@@ -116,7 +116,7 @@ class LoginEndpoints:
         logger.info(
             f"User login successful for username: {form_data.username}",
         )
-        return await self.check_user_db_model(db_user=db_user)
+        return await self._generate_token_response_model(db_user=db_user)
 
     async def refresh_access_token(
         self,
@@ -152,17 +152,18 @@ class LoginEndpoints:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-    async def check_user_db_model(self, db_user: User) -> TokenResponseModel:
-        """Check if the user exists and generates an access token."""
-        if not db_user:
-            logger.warning(
-                f"Incorrect username or password for user ID: {db_user.id}",
-            )
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect username or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+    async def _generate_token_response_model(self, db_user: User) -> TokenResponseModel:
+        """Generates an access token response model for the given user.
+
+        Args:
+        ----
+            db_user (User): The db user for whom the token is created.
+
+        Returns:
+        -------
+        TokenResponseModel: The access token and its type ("bearer").
+
+        """
         access_token_expires = timedelta(
             minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         )

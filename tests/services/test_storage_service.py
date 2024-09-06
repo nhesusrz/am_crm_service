@@ -8,13 +8,13 @@ from botocore.exceptions import ClientError
 
 COMMON_SETTINGS = {
     "MINIO_PHOTO_BUCKET_NAME": "test-bucket",
-    "MINIO_HOST": "localhost",
+    "MINIO_HOST": "minio",
     "MINIO_PORT": "9000",
     "MINIO_ACCESS_KEY_ID": "test-access-key",
     "MINIO_SECRET_ACCESS_KEY": "test-secret-key",
     "MINIO_SIGNATURE_VERSION": "s3v4",
     "MINIO_SERVICE_NAME": "s3",
-    "MINIO_ACCESS_HOST": "http://localhost:9000",
+    "MINIO_ACCESS_HOST": "localhost",
 }
 
 FILE_BYTES = b"test file content"
