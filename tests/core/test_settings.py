@@ -6,7 +6,6 @@ from sqlalchemy.engine import URL
 
 from app.core.settings import Settings, load_default_settings, load_settings
 
-EXPECTED_POSTGRES_PORT = 5432
 EXPECTED_PROJECT_NAME = "Customer Management API"
 EXPECTED_API_V1_STR = "/api/v1"
 EXPECTED_POSTGRES_HOST = "localhost"
