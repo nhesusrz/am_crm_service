@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi import FastAPI, status
 from fastapi.security import OAuth2PasswordRequestForm
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -68,7 +68,10 @@ async def async_client() -> AsyncClient:  # type: ignore
         AsyncClient: An async HTTP client configured for the FastAPI app.
 
     """
-    async with AsyncClient(app=app, base_url="http://testserver") as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="http://testserver",
+    ) as client:
         yield client  # type: ignore
 
 
@@ -325,7 +328,7 @@ def mock_session_no_buckets(mock_s3_no_buckets):
     ----
         mock_s3_no_buckets (AsyncMock): Mocked S3 client fixture.
 
-    Returns
+    Returns:
     -------
         MagicMock: Mocked aioboto3 Session class.
 
@@ -360,8 +363,8 @@ def mock_session_with_buckets(mock_s3_existing_bucket):
     ----
         mock_s3_existing_bucket (AsyncMock): Mocked S3 client fixture.
 
-    Returns
-    -------
+    Yields:
+    ------
         MagicMock: Mocked aioboto3 Session class.
 
     """

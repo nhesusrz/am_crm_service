@@ -18,12 +18,7 @@ from app.api.v1.auth.login.login_models import (
     RefreshTokenRequest,
     TokenResponseModel,
 )
-from app.core import logger, settings
-from app.core.security import (
-    authenticate_user,
-    create_access_token,
-    verify_token,
-)
+from app.core import logger, security, settings
 from app.db import db
 from app.db.models.user_model import User
 
@@ -70,7 +65,7 @@ class LoginEndpoints:
         db_session: AsyncSession = Depends(db.get_session),  # noqa
     ) -> TokenResponseModel:
         """Handle login req for admin users and returns an access token."""
-        db_user = await authenticate_user(
+        db_user = await security.authenticate_user(
             db_session=db_session,
             username=form_data.username,
             password=form_data.password,
@@ -97,7 +92,7 @@ class LoginEndpoints:
         db_session: AsyncSession = Depends(db.get_session),  # noqa
     ):
         """Handle login req for regular users and returns an access token."""
-        db_user = await authenticate_user(
+        db_user = await security.authenticate_user(
             db_session=db_session,
             username=form_data.username,
             password=form_data.password,
@@ -124,8 +119,8 @@ class LoginEndpoints:
     ) -> TokenResponseModel:
         """Handle requests to refresh an access token."""
         try:
-            username = await verify_token(request.refresh_token)
-            if not username:
+            user_id = await security.verify_token(request.refresh_token)
+            if not user_id:
                 logger.warning("Invalid refresh token used")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -135,11 +130,11 @@ class LoginEndpoints:
             access_token_expires = timedelta(
                 minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES,
             )
-            new_access_token = await create_access_token(
-                user_id=username,
+            new_access_token = await security.create_access_token(
+                user_id=user_id,
                 expires_delta=access_token_expires,
             )
-            logger.info(f"Access token refreshed for username: {username}")
+            logger.info(f"Access token refreshed for username: {user_id}")
             return TokenResponseModel(
                 access_token=new_access_token,
                 token_type="bearer",
@@ -152,8 +147,11 @@ class LoginEndpoints:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-    async def _generate_token_response_model(self, db_user: User) -> TokenResponseModel:
-        """Generates an access token response model for the given user.
+    async def _generate_token_response_model(
+        self,
+        db_user: User,
+    ) -> TokenResponseModel:
+        """Generate an access token response model for the given user.
 
         Args:
         ----
@@ -167,7 +165,7 @@ class LoginEndpoints:
         access_token_expires = timedelta(
             minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         )
-        access_token = await create_access_token(
+        access_token = await security.create_access_token(
             user_id=db_user.id,
             expires_delta=access_token_expires,
         )

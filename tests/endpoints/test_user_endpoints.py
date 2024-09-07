@@ -152,7 +152,7 @@ async def test_create_user(mocker, authenticated_admin_client: AsyncClient):
 
     response = await authenticated_admin_client.post(
         url=USER_ENDPOINT,
-        json=user_create_payload.dict(),
+        json=user_create_payload.model_dump(),
     )
 
     assert response.status_code == status.HTTP_200_OK
@@ -256,7 +256,7 @@ async def test_update_user_success(
 
     response = await authenticated_admin_client.put(
         url=USER_DETAIL_ENDPOINT.format(user_id=1),
-        json=user_update_payload.dict(),
+        json=user_update_payload.model_dump(),
     )
 
     assert response.status_code == status.HTTP_200_OK

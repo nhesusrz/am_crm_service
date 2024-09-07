@@ -73,7 +73,7 @@ async def create_user(db_session: AsyncSession, user: UserCreate) -> User:
         hashed_password=hashed_password,
         is_admin=user.is_admin,
     )
-    db_session.add(db_user)
+    await db_session.add(db_user)
     try:
         await db_session.commit()
         logger.info(f"User created with ID: {db_user.id}")
@@ -136,15 +136,17 @@ async def get_current_active_user(
             detail="Invalid token",
         )
     query = select(User).filter_by(id=user_id)
-    result = await db_session.execute(query)
-    db_user = result.unique().scalars().first()
 
-    if db_user is None:
+    result = await db_session.execute(query)
+
+    if result is None:
         logger.warning(f"User with ID: {user_id} not found")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
+
+    db_user = result.unique().scalars().first()
 
     if is_admin and not db_user.is_admin:
         logger.warning(

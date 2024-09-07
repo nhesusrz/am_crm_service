@@ -5,8 +5,8 @@ import typing
 from pathlib import Path
 from typing import Optional, Union
 
-from pydantic import Field, field_validator
-from pydantic_core.core_schema import FieldValidationInfo
+from pydantic import ConfigDict, Field, field_validator
+from pydantic_core.core_schema import ValidationInfo
 from pydantic_settings import BaseSettings
 from sqlalchemy import engine
 from sqlalchemy.engine import URL
@@ -114,18 +114,18 @@ class Settings(BaseSettings):
     def assemble_db_url(
         cls,
         v: typing.Optional[str],
-        values: FieldValidationInfo,
+        values: ValidationInfo,
     ) -> typing.Union[engine.URL, str]:
         """Assemble DB connection.
 
         Args:
         ----
             v: Value of DB connection.
-            values: FieldValidationInfo class with config values.
+            values: ValidationInfo class with config values.
 
         Returns:
         -------
-            DB connection.
+            DB connection URL.
 
         """
         if isinstance(v, str):
@@ -139,12 +139,11 @@ class Settings(BaseSettings):
             database=values.data.get("POSTGRES_DB"),
         )
 
-    class Config:
-        """Pydantic settings configuration."""
-
-        case_sensitive = True
-        extra = "allow"
-        env_file = ".env"  # Default to no file
+    model_config = ConfigDict(
+        case_sensitive=True,
+        extra="allow",
+        env_file=".env",
+    )
 
 
 @functools.lru_cache(maxsize=1)
@@ -158,7 +157,10 @@ def load_default_settings() -> Settings:
     """Get default settings values without loading .env."""
 
     class NoEnvSettings(Settings):
-        class Config:  # type: ignore
-            env_file = None
+        model_config = ConfigDict(
+            case_sensitive=True,
+            extra="allow",
+            env_file=None,
+        )
 
     return NoEnvSettings()

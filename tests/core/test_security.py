@@ -4,7 +4,6 @@ from datetime import timedelta
 from unittest.mock import AsyncMock
 
 import pytest
-from fastapi import HTTPException
 from jose import jwt
 from mock_alchemy.mocking import AlchemyMagicMock
 
@@ -74,8 +73,8 @@ async def test_verify_token_invalid_token(mock_app_settings):  # noqa
         mock_settings (MagicMock): Mocked settings fixture.
 
     """
-    with pytest.raises(HTTPException):
-        await verify_token(INVALID_TOKEN)
+    user_id = await verify_token(INVALID_TOKEN)
+    assert not user_id
 
 
 def test_hash_password():

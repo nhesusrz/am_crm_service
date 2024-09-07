@@ -40,13 +40,11 @@ from datetime import datetime, timedelta
 from typing import Union
 
 import pytz
-from fastapi import HTTPException
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from starlette import status
 
 from app.core import logger, settings
 from app.db.models.user_model import User
@@ -98,7 +96,7 @@ async def create_access_token(
     return token
 
 
-async def verify_token(token: str) -> int:
+async def verify_token(token: str) -> int | None:
     """Verify a JSON Web Token (JWT) and extract the user ID.
 
     Args:
@@ -107,20 +105,12 @@ async def verify_token(token: str) -> int:
 
     Returns:
     -------
-        int: The user ID extracted from the token.
-
-    Raises:
-    ------
-        HTTPException: If the token is invalid or the user ID is not found
+        int | None: The user ID extracted from the token if valid,
+        or `None` if the token is invalid or the user ID is not found
         in the token.
 
     """
-    logger.info("Verifying token")
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid token",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    logger.info("Verifying token...")
     try:
         payload = jwt.decode(
             token,
@@ -130,12 +120,12 @@ async def verify_token(token: str) -> int:
         user_id = payload.get("id")
         if user_id is None:
             logger.error("Token payload does not contain user ID")
-            raise credentials_exception
+            return None
         logger.info(f"Token verified for user ID: {user_id}")
         return user_id
     except JWTError as e:
         logger.error(f"Token verification failed: {e}")
-        raise credentials_exception  # noqa
+        return None
 
 
 def hash_password(password: str) -> str:

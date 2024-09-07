@@ -421,3 +421,52 @@ async def test_upload_photo_failure(mocker, authenticated_user_client):
     assert response.json() == {
         "detail": "Failed to upload photo to storage: Upload failed",
     }
+
+
+@pytest.mark.asyncio
+async def test_upload_photo_failure_updating_customer(
+    mocker,
+    authenticated_user_client,
+):
+    """Test uploading a photo for a customer by mocking a commit error.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        authenticated_user_client (AsyncClient): Async HTTP client fixture.
+
+    """
+    mock_photo_url = "http://example.com/photo_new.jpg"
+    mock_upload_file = mocker.MagicMock()
+    mock_upload_file.filename = "photo.jpg"
+    mock_upload_file.read = b"photo content"
+    mocker.patch(
+        "app.services.storage_service.S3Client.upload_file",
+        return_value=mock_photo_url,
+    )
+    mocked_db_customer = Customer(
+        id=1,
+        name="Customer 1",
+        surname="Customer 1",
+        photo_url=None,
+        creator_id=12,
+        modifier_id=3,
+    )
+    mocker.patch(
+        "app.db.actions.customer_crud.get_customer",
+        return_value=mocked_db_customer,
+    )
+    mocker.patch(
+        "app.db.actions.customer_crud.update_customer",
+        return_value=None,
+    )
+
+    response = await authenticated_user_client.put(
+        url=CUSTOMER_UPLOAD_PHOTO_ENDPOINT.format(customer_id=1),
+        files={"file": (mock_upload_file.filename, mock_upload_file.read)},
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {
+        "detail": "Failed to update customer",
+    }
