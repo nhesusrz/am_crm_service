@@ -40,6 +40,16 @@ To update the hooks to their latest versions, use:
 - Run `alembic downgrade -1` to downgrade migrations.
 - NOTE: Do not modify the imports from `alembic/env.py` file.
 
+## Testing with Pytest
+
+This project uses `poetry` for dependency management.
+
+1. `cd am_crm_service`
+2. `poetry install`
+3. `poetry shell`
+4. `poetry run pytest`
+
+
 # Project Setup and Usage
 
 ## Prerequisites
