@@ -73,7 +73,7 @@ async def create_user(db_session: AsyncSession, user: UserCreate) -> User:
         hashed_password=hashed_password,
         is_admin=user.is_admin,
     )
-    await db_session.add(db_user)
+    db_session.add(db_user)
     try:
         await db_session.commit()
         logger.info(f"User created with ID: {db_user.id}")
