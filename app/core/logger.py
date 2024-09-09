@@ -51,7 +51,7 @@ def get_logger(namespace: str = DEFAULT_LOGGER_NAMESPACE) -> logging.Logger:
     Args:
     ----
         namespace: The namespace to use for the logger.
-                    Defaults to "member-app-core".
+                    Defaults to "am-crm-service".
 
     Returns:
     -------
