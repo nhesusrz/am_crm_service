@@ -294,8 +294,11 @@ async def test_update_customer_success(mocker, authenticated_user_client):
 
 
 @pytest.mark.asyncio
-async def test_update_customer_failure(mocker, authenticated_user_client):
-    """Test failing to update a customer by ID by mocking an error response.
+async def test_update_customer_failure_get_customer(
+    mocker,
+    authenticated_user_client,
+):
+    """Test failing to update a customer by ID by mocking get_customer.
 
     Args:
     ----
@@ -321,6 +324,53 @@ async def test_update_customer_failure(mocker, authenticated_user_client):
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Customer not found"}
+
+
+@pytest.mark.asyncio
+async def test_update_customer_failure_update_customer(
+    mocker,
+    authenticated_user_client,
+):
+    """Test failing to update a customer by ID by mocking update_customer.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        authenticated_user_client (AsyncClient): Async HTTP client fixture.
+
+    """
+    mocked_db_customer = Customer(
+        id=1,
+        name="Customer 1",
+        surname="Customer 1",
+        photo_url="http://photo1.jpg",
+        creator_id=12,
+        modifier_id=3,
+    )
+
+    mocker.patch(
+        "app.db.actions.customer_crud.get_customer",
+        return_value=mocked_db_customer,
+    )
+
+    mocker.patch(
+        "app.db.actions.customer_crud.update_customer",
+        return_value=None,
+    )
+
+    payload = {
+        "name": "Customer 1 Updated",
+        "surname": "Customer 1 Updated",
+        "photo_url": "http://photo1_updated.jpg",
+    }
+
+    response = await authenticated_user_client.put(
+        url=CUSTOMER_DETAIL_ENDPOINT.format(customer_id=1),
+        json=payload,
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Customer update failed"}
 
 
 @pytest.mark.asyncio
@@ -424,11 +474,43 @@ async def test_upload_photo_failure(mocker, authenticated_user_client):
 
 
 @pytest.mark.asyncio
+async def test_upload_photo_failure_get_customer(
+    mocker,
+    authenticated_user_client,
+):
+    """Test uploading a photo for a customer by get_customer.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        authenticated_user_client (AsyncClient): Async HTTP client fixture.
+
+    """
+    mock_upload_file = mocker.MagicMock()
+    mock_upload_file.filename = "photo.jpg"
+    mock_upload_file.read = b"photo content"
+    mocker.patch(
+        "app.db.actions.customer_crud.get_customer",
+        return_value=None,
+    )
+
+    response = await authenticated_user_client.put(
+        url=CUSTOMER_UPLOAD_PHOTO_ENDPOINT.format(customer_id=1),
+        files={"file": (mock_upload_file.filename, mock_upload_file.read)},
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {
+        "detail": "Customer not found",
+    }
+
+
+@pytest.mark.asyncio
 async def test_upload_photo_failure_updating_customer(
     mocker,
     authenticated_user_client,
 ):
-    """Test uploading a photo for a customer by mocking a commit error.
+    """Test uploading a photo for a customer by mocking updating_customer.
 
     Args:
     ----
@@ -469,4 +551,91 @@ async def test_upload_photo_failure_updating_customer(
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {
         "detail": "Failed to update customer",
+    }
+
+
+@pytest.mark.asyncio
+async def test_upload_photo_failure_without_file(
+    mocker,  # noqa
+    authenticated_user_client,
+):
+    """Test uploading a photo for a customer by sending no file.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        authenticated_user_client (AsyncClient): Async HTTP client fixture.
+
+    """
+    response = await authenticated_user_client.put(
+        url=CUSTOMER_UPLOAD_PHOTO_ENDPOINT.format(customer_id=1),
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json() == {
+        "detail": "No file provided",
+    }
+
+
+@pytest.mark.asyncio
+async def test_upload_photo_failure_wrong_file_format(
+    mocker,
+    authenticated_user_client,
+):
+    """Test uploading a photo for a customer by sending the wrong file format.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        authenticated_user_client (AsyncClient): Async HTTP client fixture.
+
+    """
+    mock_upload_file = mocker.MagicMock()
+    mock_upload_file.filename = "photo.exe"
+    mock_upload_file.read = b"photo content"
+    mocker.patch(
+        "app.db.actions.customer_crud.update_customer",
+        return_value=None,
+    )
+
+    response = await authenticated_user_client.put(
+        url=CUSTOMER_UPLOAD_PHOTO_ENDPOINT.format(customer_id=1),
+        files={"file": (mock_upload_file.filename, mock_upload_file.read)},
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json() == {
+        "detail": "Invalid file format",
+    }
+
+
+@pytest.mark.asyncio
+async def test_upload_photo_failure_empty_file(
+    mocker,
+    authenticated_user_client,
+):
+    """Test uploading a photo for a customer by sending empty file.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        authenticated_user_client (AsyncClient): Async HTTP client fixture.
+
+    """
+    mock_upload_file = mocker.MagicMock()
+    mock_upload_file.filename = "photo.JPg"
+    mock_upload_file.read = b""
+    mocker.patch(
+        "app.db.actions.customer_crud.update_customer",
+        return_value=None,
+    )
+
+    response = await authenticated_user_client.put(
+        url=CUSTOMER_UPLOAD_PHOTO_ENDPOINT.format(customer_id=1),
+        files={"file": (mock_upload_file.filename, mock_upload_file.read)},
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json() == {
+        "detail": "Uploaded file is empty",
     }

@@ -21,7 +21,7 @@ Endpoints:
     customer.
 """
 
-from typing import List
+from typing import List, Optional
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
@@ -45,6 +45,8 @@ CUSTOMER_UPLOAD_PHOTO_ENDPOINT = "/customers/{customer_id}/upload_photo"
 
 logger = logger.get_logger()
 app_settings = settings.load_settings()
+
+ALLOWED_EXTENSIONS = {"jpeg", "jpg", "png", "gif"}
 
 
 class CustomerEndpoints:
@@ -223,7 +225,7 @@ class CustomerEndpoints:
     async def upload_photo(
         self,
         customer_id: int,
-        file: UploadFile = File(...),  # noqa
+        file: Optional[UploadFile] = File(None),  # noqa
         db_session: AsyncSession = Depends(db.get_session),  # noqa
         current_user: User = Depends(  # noqa
             user_crud.get_current_active_non_admin_user,
@@ -237,11 +239,24 @@ class CustomerEndpoints:
                 detail="No file provided",
             )
 
-        if not file.filename or "." not in file.filename:
+        file_extension = file.filename.split(".")[-1].lower()
+        if (
+            not file.filename
+            or "." not in file.filename
+            or file_extension not in ALLOWED_EXTENSIONS
+        ):
             logger.error("Invalid file format for customer photo upload")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid file format",
+            )
+
+        file_bytes = await file.read()
+        if not file_bytes:
+            logger.error("Uploaded file is empty")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Uploaded file is empty",
             )
 
         logger.info(f"Uploading photo for customer ID: {customer_id}")
@@ -256,17 +271,13 @@ class CustomerEndpoints:
                 detail="Customer not found",
             )
 
-        file_extension = file.filename.split(".")[-1]
-        file_name = f"{uuid4()}.{file_extension}"
-
-        file_bytes = await file.read()
-
+        new_file_name = f"{uuid4()}.{file_extension}"
         try:
             s3_client = S3Client()
             photo_url = await s3_client.upload_file(
                 bucket_name=app_settings.MINIO_PHOTO_BUCKET_NAME,
                 file_bytes=file_bytes,
-                file_name=file_name,
+                file_name=new_file_name,
             )
             logger.info(
                 f"Photo uploaded successfully for customer ID: {customer_id}",
