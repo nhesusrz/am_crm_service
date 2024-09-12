@@ -30,6 +30,7 @@ aiosqlite = "^0.20.0"
 pytz = "^2024.1"
 pre-commit = "^3.8.0"
 pydantic-core = "2.20.1"
+coverage-badge = "^1.1.2"
 
 
 [tool.poetry.group.dev.dependencies]
