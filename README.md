@@ -1,7 +1,6 @@
 # AM CRM Service API
 
-![Unit Tests Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pytest.yml/badge.svg) ![Test Coverage](![Codecov](https://codecov.io/gh/nhesusrz/am_crm_service/branch/main/graph/badge.svg)
-) ![Pre-commit Hooks Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pre-commit%20hooks.yml/badge.svg)
+![Unit Tests Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pytest.yml/badge.svg) [![codecov](https://codecov.io/github/nhesusrz/am_crm_service/graph/badge.svg?token=XJJZ7FXHYX)](https://codecov.io/github/nhesusrz/am_crm_service) ![Pre-commit Hooks Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pre-commit%20hooks.yml/badge.svg)
 
 # Development Overview
 
