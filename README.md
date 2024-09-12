@@ -1,5 +1,6 @@
-# AM CRM Service API 
-![Actions Build Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pytest.yml/badge.svg)  ![Actions Build Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pre-commit%20hooks.yml/badge.svg) 
+# AM CRM Service API
+
+![Actions Build Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pytest.yml/badge.svg)  ![Actions Build Status](https://github.com/nhesusrz/am_crm_service/actions/workflows/pre-commit%20hooks.yml/badge.svg)
 
 # Development Overview
 
