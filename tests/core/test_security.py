@@ -67,7 +67,7 @@ async def test_verify_token_success(mock_app_settings):  # noqa
 
 @pytest.mark.asyncio
 async def test_verify_token_invalid_token(mock_app_settings):  # noqa
-    """Test verifying an invalid token raises an HTTPException.
+    """Test verifying an invalid token raises an JWTError.
 
     Args:
     ----
@@ -75,6 +75,23 @@ async def test_verify_token_invalid_token(mock_app_settings):  # noqa
 
     """
     user_id = await verify_token(INVALID_TOKEN)
+    assert not user_id
+
+
+@pytest.mark.asyncio
+async def test_verify_token_retrieve_none_user_id(mock_app_settings):  # noqa
+    """Test that verifies the behavior when the user_id is None.
+
+    Args:
+    ----
+        mock_settings (MagicMock): Mocked settings fixture.
+
+    """
+    token = await create_access_token(
+        user_id=None,
+        expires_delta=EXPIRES_DELTA,
+    )
+    user_id = await verify_token(token)
     assert not user_id
 
 
