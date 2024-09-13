@@ -390,7 +390,7 @@ async def test_refresh_token_failure(mocker, async_client):
 
 
 @pytest.mark.asyncio
-async def test_refresh_token_verify_token_failure(mocker, async_client):
+async def test_refresh_token_verify_token_exception(mocker, async_client):
     """Test refresh token failure by mocking verify_token exception.
 
     Args:
@@ -415,6 +415,34 @@ async def test_refresh_token_verify_token_failure(mocker, async_client):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     error_response = response.json()
     assert error_response["detail"] == "Some error occurred"
+
+
+@pytest.mark.asyncio
+async def test_refresh_token_verify_token_none(mocker, async_client):
+    """Test refresh token failure by mocking verify_token result None.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture.
+        async_client (httpx.AsyncClient): Async HTTP client fixture.
+
+    """
+    refresh_token_request = RefreshTokenRequest(
+        refresh_token="valid_refresh_token",
+    )
+    mocker.patch(
+        "app.core.security.verify_token",
+        return_value=None,
+    )
+
+    response = await async_client.post(
+        url=REFRESH_TOKEN_ENDPOINT,
+        json=refresh_token_request.model_dump(),
+    )
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    error_response = response.json()
+    assert error_response["detail"] == "401: Invalid refresh token"
 
 
 @pytest.mark.asyncio
