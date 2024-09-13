@@ -161,6 +161,52 @@ async def test_s3_client_upload_file_error(  # noqa
 
 @pytest.mark.asyncio
 @patch("app.core.settings.load_settings")
+async def test_s3_client_list_buckets_error(  # noqa
+    mock_load_settings,  # noqa
+    mock_s3_no_buckets,
+    mock_session_no_buckets,  # noqa
+    s3_client,
+):
+    """Test the list_buckets method to ensure it handles errors correctly.
+
+    Args:
+    ----
+        mock_load_settings (MagicMock): Mocked load_settings function.
+        mock_s3_no_buckets (AsyncMock): Mocked S3 client with no buckets.
+        mock_session_no_buckets (MagicMock): Mocked aioboto3 Session with no
+        buckets.
+        s3_client (S3Client): The S3Client singleton instance.
+
+    Asserts:
+    -------
+        None: Ensures that exceptions are properly raised during the upload
+        process.
+
+    """
+    mock_client_error = ClientError(
+        {
+            "Error": {
+                "Code": "InternalError",
+                "Message": "An error occurred",
+            },
+        },
+        "PutObject",
+    )
+    mock_s3_no_buckets.list_buckets.side_effect = mock_client_error
+
+    with pytest.raises(ClientError) as exc_info:
+        await s3_client.upload_file(
+            bucket_name=BUCKET_NAME,
+            file_bytes=FILE_BYTES,
+            file_name=FILE_NAME,
+        )
+
+    mock_s3_no_buckets.list_buckets.assert_called_once_with()
+    assert exc_info.value == mock_client_error
+
+
+@pytest.mark.asyncio
+@patch("app.core.settings.load_settings")
 async def test_s3_client_create_bucket_error(  # noqa
     mock_load_settings,  # noqa
     mock_s3_no_buckets,
