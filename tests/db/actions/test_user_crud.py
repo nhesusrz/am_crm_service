@@ -310,6 +310,39 @@ async def test_get_current_active_user_admin_success():
 
 
 @pytest.mark.asyncio
+async def test_get_current_active_user_failed_user_not_found():
+    """Test failed when the current user is not found in the db."""
+    mock_db_session = AsyncMock()
+    mock_user = User(
+        id=USER_ID_1,
+        username=USERNAME_1,
+        hashed_password=HASHED_PASSWORD,
+        is_admin=IS_ADMIN,
+    )
+
+    with patch(
+        "app.db.actions.user_crud.verify_token",
+        return_value=USER_ID_1,
+    ):
+        mock_result = AlchemyMagicMock()
+        mock_scalars = mock_result.unique.return_value.scalars
+        mock_first = mock_scalars.return_value.first
+        mock_first.return_value = mock_user
+
+        mock_db_session.execute = AsyncMock(return_value=None)
+
+        with pytest.raises(HTTPException) as exc_info:
+            await get_current_active_user(
+                token="valid_token",
+                db_session=mock_db_session,
+                is_admin=True,
+            )
+
+    assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
+    assert exc_info.value.detail == "User not found"
+
+
+@pytest.mark.asyncio
 async def test_get_current_active_user_not_admin():
     """Test retrieving the current not valid active admin user."""
     mock_db_session = AsyncMock()

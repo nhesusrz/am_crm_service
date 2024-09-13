@@ -141,29 +141,32 @@ async def test_create_customer():
     assert created_customer.surname == SURNAME
     assert created_customer.photo_url == PHOTO_URL
 
-    @pytest.mark.asyncio
-    async def test_create_customer_failure():
-        """Test creating a new customer."""
-        mock_db_session = AsyncMock()
-        mock_db_session.add = AsyncMock()
-        mock_db_session.commit = AsyncMock()
-        mock_db_session.commit.side_effect = SQLAlchemyError("Database error")
 
-        current_user = User(id=USER_ID)
-        customer_create = CustomerCreate(
-            name=NAME,
-            surname=SURNAME,
-            photo_url=PHOTO_URL,
+@pytest.mark.asyncio
+async def test_create_customer_failure():
+    """Test creating a new customer."""
+    mock_db_session = AsyncMock()
+    mock_db_session.add = AsyncMock()
+    mock_db_session.commit = AsyncMock()
+    expected_exception = SQLAlchemyError("Database error")
+    mock_db_session.commit.side_effect = expected_exception
+
+    current_user = User(id=USER_ID)
+    customer_create = CustomerCreate(
+        name=NAME,
+        surname=SURNAME,
+        photo_url=PHOTO_URL,
+    )
+
+    with pytest.raises(SQLAlchemyError) as exc_info:
+        await create_customer(
+            db_session=mock_db_session,
+            customer=customer_create,
+            current_user=current_user,
         )
 
-        with pytest.raises(SQLAlchemyError):
-            await create_customer(
-                db_session=mock_db_session,
-                customer=customer_create,
-                current_user=current_user,
-            )
-
-            mock_db_session.rollback.assert_awaited_once()
+        mock_db_session.rollback.assert_awaited_once()
+    assert exc_info.value == expected_exception
 
 
 @pytest.mark.asyncio

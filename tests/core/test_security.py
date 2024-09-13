@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock
 import pytest
 from jose import jwt
 from mock_alchemy.mocking import AlchemyMagicMock
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.security import (
     authenticate_user,
@@ -165,3 +166,33 @@ async def test_authenticate_user_failure(mocker):
     user = await authenticate_user(mock_db_session, USERNAME, PASSWORD)
 
     assert user is None
+
+
+@pytest.mark.asyncio
+async def test_authenticate_user_db_failure(mocker):
+    """Test authenticating fails when a db execute error occurs.
+
+    Args:
+    ----
+        mocker (pytest_mock.MockerFixture): Pytest mock fixture for mocking.
+
+    """
+    mock_db_user = User(
+        id=USER_ID,
+        username=USERNAME,
+        hashed_password=HASHED_PASSWORD,
+        is_admin=False,
+    )
+    mock_result = AlchemyMagicMock()
+    mock_result.unique.return_value.scalars.return_value.first.return_value = (
+        mock_db_user
+    )
+    mock_db_session = AsyncMock()
+    expected_exception = SQLAlchemyError("Database error")
+    mock_db_session.execute.side_effect = expected_exception
+
+    mocker.patch("app.core.security.verify_password", return_value=True)
+
+    with pytest.raises(SQLAlchemyError) as exc_info:
+        await authenticate_user(mock_db_session, USERNAME, PASSWORD)
+    assert exc_info.value == expected_exception
